@@ -1,0 +1,19 @@
+name: Сборка ISO
+on:
+  workflow_dispatch: # Запуск вручную кнопкой
+
+jobs:
+  build-iso:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: read
+    steps:
+      - name: Проверка файлов
+        uses: actions/checkout@v4
+
+      - name: Генерируем ISO
+        uses: blue-build/apps-action@v1
+        with:
+          recipe: 'recipe.yml'
+          cli_version: 'v0.9.35'
