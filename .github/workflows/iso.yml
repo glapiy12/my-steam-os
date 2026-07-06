@@ -13,13 +13,8 @@ jobs:
       - name: Проверка репозитория
         uses: actions/checkout@v4
 
-      - name: Обновление Podman
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y podman
-
-      - name: Вход в GitHub Container Registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: Вход в GitHub Container Registry (Docker)
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
       - name: Генерируем ISO
         uses: blue-build/github-action@v1
@@ -30,5 +25,3 @@ jobs:
           build_opts: '--no-sign'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # ISO будет автоматически загружен как артефакт с именем "iso"
