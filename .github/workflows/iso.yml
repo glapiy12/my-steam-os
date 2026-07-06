@@ -10,21 +10,16 @@ jobs:
       packages: write
       id-token: write
     steps:
-      - name: Проверка файлов
+      - name: Проверка репозитория
         uses: actions/checkout@v4
 
-      # Чистая генерация файла конфигурации Docker без лишних переносов строк
-      - name: Настройка Docker Config
+      - name: Обновление Podman
         run: |
-          mkdir -p $HOME/.docker
-          AUTH_TOKEN=$(echo -n "${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}" | base64 -w 0)
-          cat << EOF > $HOME/.docker/config.json
-          {"auths":{"ghcr.io":{"auth":"$AUTH_TOKEN"}}}
-          EOF
-          
-          # Дублируем для рута
-          sudo mkdir -p /root/.docker
-          sudo cp $HOME/.docker/config.json /root/.docker/config.json
+          sudo apt-get update
+          sudo apt-get install -y podman
+
+      - name: Вход в GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Генерируем ISO
         uses: blue-build/github-action@v1
@@ -35,3 +30,5 @@ jobs:
           build_opts: '--no-sign'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ISO будет автоматически загружен как артефакт с именем "iso"
