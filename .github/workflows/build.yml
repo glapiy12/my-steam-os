@@ -22,4 +22,5 @@ jobs:
           recipe: 'recipe.yml'
           registry_token: ${{ github.token }}
           cli_version: 'v0.9.35'
-          build_opts: '--no-sign --skip-validation' # Отключаем капризную валидацию схем
+          is_asymmetric: false
+          build_opts: '--no-sign --skip-validation'
