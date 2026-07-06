@@ -19,7 +19,7 @@ jobs:
       - name: Собираем ОС
         uses: blue-build/github-action@v1
         with:
-          recipe: './recipe.yml' # Добавили точку со слэшем, чтобы он искал в корне
+          recipe: 'recipe.yml'
           registry_token: ${{ github.token }}
           cli_version: 'v0.9.35'
           build_opts: '--no-sign'
