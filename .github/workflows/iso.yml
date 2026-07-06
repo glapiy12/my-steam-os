@@ -13,9 +13,6 @@ jobs:
       - name: Проверка репозитория
         uses: actions/checkout@v4
 
-      - name: Вход в GitHub Container Registry (Docker)
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-
       - name: Генерируем ISO
         uses: blue-build/github-action@v1
         with:
@@ -23,5 +20,4 @@ jobs:
           cli_version: 'v0.9.35'
           archive: true
           build_opts: '--no-sign'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}   # ← Вот это было пропущено
