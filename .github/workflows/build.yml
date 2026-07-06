@@ -22,4 +22,5 @@ jobs:
           recipe: 'recipe.yml'
           registry_token: ${{ github.token }}
           cli_version: 'v0.9.35'
+          use_unstable_cli: true # Переключаем на исправленный CLI
           build_opts: '--no-sign'
