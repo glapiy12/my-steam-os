@@ -19,5 +19,7 @@ jobs:
           recipe: 'recipe.yml'
           cli_version: 'v0.9.35'
           archive: true
-          # Передаем флаг отключения подписи сборщику ISO через правильную переменную
           build_opts: '--no-sign'
+        # Передаем токен гитхаба для автоматического логина в реестр пакетов
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
