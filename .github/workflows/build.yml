@@ -1,0 +1,23 @@
+name: Сборка Системы
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+    steps:
+      - name: Проверка файлов
+        uses: actions/checkout@v4
+
+      - name: Собираем ОС
+        uses: blue-build/github-action@v1
+        with:
+          recipe: 'recipe.yml'
+          registry_token: ${{ github.token }}
