@@ -1,6 +1,6 @@
 name: Сборка ISO
 on:
-  workflow_dispatch:
+  workflow_dispatch: # Позволяет запускать сборку вручную через вкладку Actions
 
 jobs:
   build-iso:
@@ -13,7 +13,7 @@ jobs:
       - name: Проверка файлов
         uses: actions/checkout@v4
 
-      # Принудительно логиним Docker в GitHub Packages перед сборкой ISO
+      # Авторизуем Docker в GitHub Container Registry на уровне самого раннера
       - name: Логин в GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -27,4 +27,8 @@ jobs:
           recipe: 'recipe.yml'
           cli_version: 'v0.9.35'
           archive: true
-          build_opts: '--no-sign'
+          build_opts: '--no-sign' # Отключаем подпись, чтобы не искать ключи cosign
+        env:
+          # Передаем конфигурацию докера и токен внутрь контейнера сборщика
+          DOCKER_CONFIG: /home/runner/.docker
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
