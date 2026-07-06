@@ -20,4 +20,6 @@ jobs:
           cli_version: 'v0.9.35'
           archive: true
           build_opts: '--no-sign'
-          token: ${{ secrets.GITHUB_TOKEN }}   # ← Вот это было пропущено
+          registry_token: ${{ secrets.GITHUB_TOKEN }}
+          registry_username: ${{ github.repository_owner }}
+          registry: ghcr.io
