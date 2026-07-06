@@ -18,8 +18,17 @@ jobs:
         with:
           recipe: 'recipe.yml'
           cli_version: 'v0.9.35'
-          archive: true
           build_opts: '--no-sign'
           registry_token: ${{ secrets.GITHUB_TOKEN }}
           registry_username: ${{ github.repository_owner }}
           registry: ghcr.io
+
+      # Явно сохраняем ISO-файл как артефакт
+      - name: Загрузка ISO в артефакты
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-steam-os-iso
+          path: |
+            *.iso
+            *.iso.zip
+          if-no-files-found: error   # чтобы упасть, если ISO не найден
