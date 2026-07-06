@@ -22,9 +22,9 @@ jobs:
           recipe: 'recipe.yml'
           registry_token: ${{ github.token }}
           cli_version: 'v0.9.35'
-          # Оставляем только тот параметр, который экшен официально ждет:
           cosign_private_key: ${{ secrets.SIGNING_SECRET }}
           build_opts: '--skip-validation'
-        # Передаем пароль, чтобы утилита могла расшифровать ключ
+        # Передаем ОБА секрета напрямую в окружение контейнера
         env:
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+          COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
