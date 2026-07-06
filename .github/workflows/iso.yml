@@ -13,13 +13,16 @@ jobs:
       - name: Проверка файлов
         uses: actions/checkout@v4
 
-      # Принудительно генерируем структуру файлов конфигурации Docker для текущего пользователя root/runner
+      # Чистая генерация файла конфигурации Docker без лишних переносов строк
       - name: Настройка Docker Config
         run: |
           mkdir -p $HOME/.docker
-          echo "{\"auths\":{\"ghcr.io\":{\"auth\":\"$(echo -n ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} | base64)\"}}}" > $HOME/.docker/config.json
+          AUTH_TOKEN=$(echo -n "${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}" | base64 -w 0)
+          cat << EOF > $HOME/.docker/config.json
+          {"auths":{"ghcr.io":{"auth":"$AUTH_TOKEN"}}}
+          EOF
           
-          # Дублируем в системную папку на случай, если CLI заглянет туда
+          # Дублируем для рута
           sudo mkdir -p /root/.docker
           sudo cp $HOME/.docker/config.json /root/.docker/config.json
 
