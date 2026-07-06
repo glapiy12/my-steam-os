@@ -1,13 +1,13 @@
 name: Сборка ISO
 on:
-  workflow_dispatch: # Запуск вручную кнопкой
+  workflow_dispatch:
 
 jobs:
   build-iso:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      packages: read
+      packages: write
       id-token: write
     steps:
       - name: Проверка файлов
@@ -18,5 +18,5 @@ jobs:
         with:
           recipe: 'recipe.yml'
           cli_version: 'v0.9.35'
-          # Специальный флаг, который говорит сборщику делать именно ISO-установщик
-          build_opts: '--iso'
+          # Включаем сборку ISO инсталлятора штатными средствами экшена
+          archive: true
