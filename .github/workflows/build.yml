@@ -16,19 +16,14 @@ jobs:
       - name: Проверка файлов
         uses: actions/checkout@v4
 
-      # Костыль: создаем фейковый ключ, чтобы тупой сборщик не падал на этапе копирования
-      - name: Создание фейковых ключей подписи
-        run: |
-          mkdir -p cosign
-          echo "fake key" > cosign/cosign.key
-          echo "fake pub" > cosign/cosign.pub
-
       - name: Собираем ОС
         uses: blue-build/github-action@v1
         with:
           recipe: 'recipe.yml'
           registry_token: ${{ github.token }}
           cli_version: 'v0.9.35'
-          # Подсовываем ему наши созданные пустышки
-          signing_secret: 'fake key' 
-          build_opts: '--no-sign --skip-validation'
+          # Прописываем ОБА возможных варианта названия переменных для ключа, чтобы эта тварь точно его увидела
+          signing_secret: ${{ secrets.SIGNING_SECRET }}
+          cosign_private_key: ${{ secrets.SIGNING_SECRET }}
+          # Убираем любые упоминания --no-sign, пусть думает, что подписывает нормально
+          build_opts: '--skip-validation'
