@@ -1,6 +1,6 @@
 name: Сборка ISO
 on:
-  workflow_dispatch: # Позволяет запускать сборку вручную через вкладку Actions
+  workflow_dispatch:
 
 jobs:
   build-iso:
@@ -13,13 +13,15 @@ jobs:
       - name: Проверка файлов
         uses: actions/checkout@v4
 
-      # Авторизуем Docker в GitHub Container Registry на уровне самого раннера
-      - name: Логин в GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      # Принудительно генерируем структуру файлов конфигурации Docker для текущего пользователя root/runner
+      - name: Настройка Docker Config
+        run: |
+          mkdir -p $HOME/.docker
+          echo "{\"auths\":{\"ghcr.io\":{\"auth\":\"$(echo -n ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} | base64)\"}}}" > $HOME/.docker/config.json
+          
+          # Дублируем в системную папку на случай, если CLI заглянет туда
+          sudo mkdir -p /root/.docker
+          sudo cp $HOME/.docker/config.json /root/.docker/config.json
 
       - name: Генерируем ISO
         uses: blue-build/github-action@v1
@@ -27,8 +29,6 @@ jobs:
           recipe: 'recipe.yml'
           cli_version: 'v0.9.35'
           archive: true
-          build_opts: '--no-sign' # Отключаем подпись, чтобы не искать ключи cosign
+          build_opts: '--no-sign'
         env:
-          # Передаем конфигурацию докера и токен внутрь контейнера сборщика
-          DOCKER_CONFIG: /home/runner/.docker
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
