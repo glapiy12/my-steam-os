@@ -1,0 +1,10 @@
+[copr:copr.fedorainfracloud.org:hanted:hhd]
+name=Copr repo for hhd owned by hanted
+baseurl=https://download.copr.fedorainfracloud.org/results/hanted/hhd/fedora-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://download.copr.fedorainfracloud.org/results/hanted/hhd/pubkey.gpg
+repo_gpgcheck=0
+enabled=1
+enabled_metadata=1
