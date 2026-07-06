@@ -8,12 +8,15 @@ jobs:
     permissions:
       contents: write
       packages: read
+      id-token: write
     steps:
       - name: Проверка файлов
         uses: actions/checkout@v4
 
       - name: Генерируем ISO
-        uses: blue-build/apps-action@v1
+        uses: blue-build/github-action@v1
         with:
           recipe: 'recipe.yml'
           cli_version: 'v0.9.35'
+          # Специальный флаг, который говорит сборщику делать именно ISO-установщик
+          build_opts: '--iso'
