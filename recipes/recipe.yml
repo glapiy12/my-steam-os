@@ -4,9 +4,15 @@ base-image: quay.io/fedora/fedora-silverblue
 image-version: 44
 
 modules:
+  # 1. Подключаем репозитории RPM Fusion (свободный и несвободный), где лежит Steam
+  - type: yum-repo
+    repositories:
+      - https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-%RELEASEVER%.noarch.rpm
+      - https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-%RELEASEVER%.noarch.rpm
+
+  # 2. Теперь спокойно устанавливаем пакеты
   - type: rpm-ostree
     install:
       - gamescope
-      - steam
-      - hhd
       - mangohud
+      - steam # Теперь он найдется в RPM Fusion!
